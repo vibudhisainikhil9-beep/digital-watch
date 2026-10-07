@@ -220,11 +220,7 @@ input:checked + .slider::before { transform: translateX(22px); }
   gap: 4px;
 }
 
-/* Seconds group is slightly smaller so everything fits one line */
-.flip-group.secs {
-  --flip-h: calc(var(--flip-h) * 0.72);
-  --flip-w: calc(var(--flip-w) * 0.72);
-}
+/* Seconds group — same size as H and M, full flip animation */
 
 .flip-card {
   position: relative;
@@ -383,12 +379,12 @@ input:checked + .slider::before { transform: translateX(22px); }
 }
 
 #fs-display {
-  --flip-h: clamp(80px, 16vw, 150px);
-  --flip-w: clamp(58px, 11.5vw, 112px);
+  --flip-h: clamp(64px, 12vw, 130px);
+  --flip-w: clamp(46px, 8.8vw, 96px);
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: nowrap;
 }
 
@@ -468,11 +464,11 @@ input:checked + .slider::before { transform: translateX(22px); }
 
   /* In landscape, height is the limiting dimension — use vh */
   #fs-display {
-    --flip-h: clamp(70px, 46vh, 160px);   /* tall enough to fill screen height */
-    --flip-w: clamp(50px, 34vh, 120px);
-    gap: 6px;
+    --flip-h: clamp(58px, 40vh, 140px);
+    --flip-w: clamp(42px, 29vh, 104px);
+    gap: 4px;
   }
-  #fs-clock-wrap { gap: 6px; }
+  #fs-clock-wrap { gap: 4px; }
 }
 
 
