@@ -1,0 +1,480 @@
+/* ═══════════════════════════════════════════════════════════════
+   FLIPTIME — OLED-FIRST DARK THEME
+   Pure black (#000) for OLED pixel-off savings on Google Pixel
+   ═══════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black:      #000000;
+  --bg-card:    #0a0a0a;
+  --bg-surface: #111111;
+  --border:     #222222;
+  --amber:      #FF9500;
+  --amber-dim:  #b36a00;
+  --amber-glow: rgba(255,149,0,0.18);
+  --white:      #ffffff;
+  --grey:       #666666;
+  --green:      #34C759;
+  --red:        #FF3B30;
+  --radius:     14px;
+  --flip-h:     clamp(70px, 14vw, 120px);
+  --flip-w:     clamp(52px, 10.5vw, 90px);
+}
+
+html, body {
+  width: 100%; height: 100%;
+  background: var(--black);
+  color: var(--white);
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+
+/* ── Scrollable home screen ────────────────────────────────── */
+#home-screen {
+  min-height: 100vh;
+  padding: 0 20px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* ── Header ────────────────────────────────────────────────── */
+#home-header { padding-top: 52px; text-align: center; }
+
+#app-title {
+  font-size: clamp(26px, 7vw, 42px);
+  font-weight: 900;
+  letter-spacing: 6px;
+  color: var(--amber);
+  text-shadow: 0 0 24px var(--amber-glow), 0 0 6px var(--amber-glow);
+}
+
+.title-gap { display: inline-block; width: 14px; }
+
+.title-flip {
+  display: inline-block;
+  animation: titlePop 0.4s ease backwards;
+}
+.title-flip:nth-child(1){animation-delay:0.05s}
+.title-flip:nth-child(2){animation-delay:0.10s}
+.title-flip:nth-child(3){animation-delay:0.15s}
+.title-flip:nth-child(4){animation-delay:0.20s}
+.title-flip:nth-child(6){animation-delay:0.28s}
+.title-flip:nth-child(7){animation-delay:0.33s}
+.title-flip:nth-child(8){animation-delay:0.38s}
+.title-flip:nth-child(9){animation-delay:0.43s}
+
+@keyframes titlePop {
+  from { opacity:0; transform: translateY(-10px) rotateX(-90deg); }
+  to   { opacity:1; transform: translateY(0) rotateX(0); }
+}
+
+#home-subtitle {
+  margin-top: 6px;
+  font-size: 13px;
+  color: var(--grey);
+  letter-spacing: 1px;
+}
+
+/* ── Mini preview ──────────────────────────────────────────── */
+#home-preview {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 130px;
+}
+
+/* ── Mode Cards ────────────────────────────────────────────── */
+#mode-cards {
+  display: flex;
+  gap: 14px;
+}
+
+.mode-card {
+  flex: 1;
+  background: var(--bg-surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 12px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.mode-card.active {
+  border-color: var(--amber);
+  background: rgba(255,149,0,0.07);
+}
+
+.mode-icon { font-size: 28px; margin-bottom: 6px; }
+.mode-label { font-size: 15px; font-weight: 700; color: var(--white); }
+.mode-desc  { font-size: 11px; color: var(--grey); margin-top: 3px; }
+
+/* ── Stopwatch home controls ───────────────────────────────── */
+#stopwatch-controls-home {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+}
+
+.sw-btn {
+  flex: 1;
+  max-width: 160px;
+  padding: 14px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.sw-btn:active { opacity: 0.7; }
+.sw-btn.green  { background: var(--green); color: #000; }
+.sw-btn.red    { background: var(--red);   color: #fff; }
+
+/* ── Settings ──────────────────────────────────────────────── */
+#settings-panel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+}
+.setting-row:last-child { border-bottom: none; }
+
+.setting-label { font-size: 15px; color: var(--white); }
+
+/* iOS-style toggle */
+.toggle { position: relative; display: inline-block; width: 50px; height: 28px; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+
+.slider {
+  position: absolute; inset: 0;
+  background: #333;
+  border-radius: 28px;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+.slider::before {
+  content: '';
+  position: absolute;
+  width: 22px; height: 22px;
+  left: 3px; bottom: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+input:checked + .slider { background: var(--amber); }
+input:checked + .slider::before { transform: translateX(22px); }
+
+/* ── Launch Buttons ────────────────────────────────────────── */
+#launch-buttons { display: flex; gap: 14px; }
+
+.launch-btn {
+  flex: 1;
+  padding: 16px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  background: var(--amber);
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.launch-btn.secondary {
+  background: var(--bg-surface);
+  color: var(--amber);
+  border: 1.5px solid var(--amber);
+}
+.launch-btn:active { opacity: 0.75; }
+.btn-icon { font-size: 18px; }
+
+/* ══════════════════════════════════════════════════════════════
+   FLIP CARD COMPONENT
+   ══════════════════════════════════════════════════════════════ */
+
+.flip-group {
+  display: flex;
+  flex-direction: row;   /* digits side-by-side within each group */
+  align-items: center;
+  gap: 4px;
+}
+
+/* Seconds group is slightly smaller so everything fits one line */
+.flip-group.secs {
+  --flip-h: calc(var(--flip-h) * 0.72);
+  --flip-w: calc(var(--flip-w) * 0.72);
+}
+
+.flip-card {
+  position: relative;
+  width: var(--flip-w);
+  height: var(--flip-h);
+  perspective: 600px;
+}
+
+/* The two halves */
+.flip-upper, .flip-lower {
+  position: absolute;
+  width: 100%;
+  height: 50%;
+  overflow: hidden;
+  background: var(--bg-card);
+  border-radius: 4px 4px 0 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.flip-lower {
+  top: 50%;
+  align-items: flex-start;
+  border-radius: 0 0 4px 4px;
+  border-top: 1px solid #000;
+}
+
+.flip-upper span, .flip-lower span {
+  font-size: calc(var(--flip-h) * 0.85);
+  font-weight: 900;
+  line-height: 1;
+  color: var(--amber);
+  font-variant-numeric: tabular-nums;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: -2px;
+  text-shadow: 0 0 20px var(--amber-glow);
+}
+
+.flip-upper span { transform: translateY(50%); }
+.flip-lower span { transform: translateY(-50%); }
+
+/* Flip animation panels */
+.flip-front, .flip-back {
+  position: absolute;
+  width: 100%;
+  height: 50%;
+  overflow: hidden;
+  background: var(--bg-card);
+  display: flex;
+  transform-origin: bottom center;
+  backface-visibility: hidden;
+  border-radius: 4px 4px 0 0;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.flip-front { top: 0; }
+.flip-back  { top: 50%; align-items: flex-start; border-radius: 0 0 4px 4px; border-top: 1px solid #000; }
+
+.flip-front span, .flip-back span {
+  font-size: calc(var(--flip-h) * 0.85);
+  font-weight: 900;
+  color: var(--amber);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -2px;
+  text-shadow: 0 0 20px var(--amber-glow);
+}
+.flip-front span { transform: translateY(50%); }
+.flip-back  span { transform: translateY(-50%); }
+
+.flip-front.flipping {
+  animation: flipTop 0.3s ease-in forwards;
+}
+.flip-back.flipping {
+  animation: flipBottom 0.3s ease-out 0.15s forwards;
+}
+
+@keyframes flipTop {
+  from { transform: rotateX(0deg);    }
+  to   { transform: rotateX(-90deg);  }
+}
+@keyframes flipBottom {
+  from { transform: rotateX(90deg);  }
+  to   { transform: rotateX(0deg);   }
+}
+
+/* AM / PM badge */
+.ampm-badge {
+  display: flex;
+  align-items: flex-end;
+  padding-bottom: calc(var(--flip-h) * 0.08);
+  font-size: calc(var(--flip-h) * 0.28);
+  font-weight: 900;
+  color: var(--amber);
+  letter-spacing: 2px;
+  text-shadow: 0 0 12px var(--amber-glow);
+  opacity: 0.85;
+  min-width: 2.5em;
+}
+
+/* Digit separator (colon) */
+.flip-sep {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: calc(var(--flip-h) * 0.15);
+  padding-bottom: 4px;
+  padding-top: 0;
+}
+
+.flip-sep span {
+  display: block;
+  width: calc(var(--flip-h) * 0.10);
+  height: calc(var(--flip-h) * 0.10);
+  background: var(--amber);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--amber-glow);
+}
+
+/* ── Preview clock (small) ─────────────────────────────────── */
+#preview-clock {
+  --flip-h: 64px;
+  --flip-w: 48px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   FULLSCREEN VIEW
+   ══════════════════════════════════════════════════════════════ */
+
+#fullscreen-view {
+  position: fixed;
+  inset: 0;
+  background: var(--black);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  /* OLED-friendly: keep it truly black everywhere */
+}
+
+#fs-clock-wrap {
+  display: flex;
+  flex-direction: row;       /* ← single horizontal row: all groups inline */
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  /* pixel-shift applied via JS */
+  transition: transform 6s ease;
+}
+
+#fs-display {
+  --flip-h: clamp(80px, 16vw, 150px);
+  --flip-w: clamp(58px, 11.5vw, 112px);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+#fs-labels { display: none; }  /* no labels — single clean line */
+
+.fs-seg-label { display: none; }
+
+/* ── Fullscreen controls overlay ───────────────────────────── */
+#fs-controls {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  padding: 20px 24px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%);
+  transition: opacity 0.5s;
+  z-index: 1000;
+}
+
+#fs-controls.fs-controls-hidden { opacity: 0; pointer-events: none; }
+#fs-controls.fs-controls-visible { opacity: 1; pointer-events: all; }
+
+.fs-ctrl-btn {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: #fff;
+  padding: 9px 18px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.fs-ctrl-btn:active { background: rgba(255,255,255,0.18); }
+
+#fs-mode-toggle { display: flex; gap: 8px; margin-left: 4px; }
+#fs-brightness-wrap {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #aaa;
+  font-size: 16px;
+}
+#fs-brightness { width: 90px; accent-color: var(--amber); }
+
+#fs-tap-hint {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: #333;
+  letter-spacing: 1px;
+  pointer-events: none;
+  transition: opacity 1s;
+}
+
+/* ── Brightness overlay ────────────────────────────────────── */
+#brightness-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0);
+  pointer-events: none;
+  z-index: 998;
+  transition: background 0.3s;
+}
+
+/* ── Utility ───────────────────────────────────────────────── */
+.hidden { display: none !important; }
+
+/* ── Landscape-specific tweaks ─────────────────────────────── */
+@media (orientation: landscape) {
+  #home-screen { padding-top: 0; }
+  #home-header  { padding-top: 20px; }
+
+  /* In landscape, height is the limiting dimension — use vh */
+  #fs-display {
+    --flip-h: clamp(70px, 46vh, 160px);   /* tall enough to fill screen height */
+    --flip-w: clamp(50px, 34vh, 120px);
+    gap: 6px;
+  }
+  #fs-clock-wrap { gap: 6px; }
+}
+
+
+/* ── Scrollbar hide ─────────────────────────────────────────── */
+::-webkit-scrollbar { display: none; }

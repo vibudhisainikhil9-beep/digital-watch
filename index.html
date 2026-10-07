@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>FlipTime</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════ HOME SCREEN ═══════════════════ -->
+  <div id="home-screen">
+
+    <div id="home-header">
+      <div id="app-title">
+        <span class="title-flip">F</span><span class="title-flip">L</span><span class="title-flip">I</span><span class="title-flip">P</span>
+        <span class="title-gap"></span>
+        <span class="title-flip">T</span><span class="title-flip">I</span><span class="title-flip">M</span><span class="title-flip">E</span>
+      </div>
+      <div id="home-subtitle">Your OLED-friendly desk clock</div>
+    </div>
+
+    <!-- Mini live preview -->
+    <div id="home-preview">
+      <div id="preview-clock"></div>
+    </div>
+
+    <!-- Mode cards -->
+    <div id="mode-cards">
+      <div class="mode-card active" id="card-clock" onclick="selectMode('clock')">
+        <div class="mode-icon">🕐</div>
+        <div class="mode-label">Clock</div>
+        <div class="mode-desc">Current time</div>
+      </div>
+      <div class="mode-card" id="card-stopwatch" onclick="selectMode('stopwatch')">
+        <div class="mode-icon">⏱</div>
+        <div class="mode-label">Stopwatch</div>
+        <div class="mode-desc">Count up</div>
+      </div>
+    </div>
+
+    <!-- Stopwatch controls (only visible in stopwatch mode) -->
+    <div id="stopwatch-controls-home" class="hidden">
+      <button class="sw-btn green" id="sw-start-btn" onclick="swToggle()">START</button>
+      <button class="sw-btn red" onclick="swReset()">RESET</button>
+    </div>
+
+    <!-- Settings -->
+    <div id="settings-panel">
+      <div class="setting-row">
+        <span class="setting-label">24-Hour Format</span>
+        <label class="toggle">
+          <input type="checkbox" id="toggle24h" onchange="toggleSetting('h24')" />
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <span class="setting-label">Show Seconds</span>
+        <label class="toggle">
+          <input type="checkbox" id="toggleSec" checked onchange="toggleSetting('sec')" />
+          <span class="slider"></span>
+        </label>
+      </div>
+      <div class="setting-row">
+        <span class="setting-label">Tick Sound</span>
+        <label class="toggle">
+          <input type="checkbox" id="toggleTick" onchange="toggleSetting('tick')" />
+          <span class="slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Launch buttons -->
+    <div id="launch-buttons">
+      <button class="launch-btn" onclick="enterFullscreen('portrait')">
+        <span class="btn-icon">⛶</span> Full Screen
+      </button>
+      <button class="launch-btn secondary" onclick="enterFullscreen('landscape')">
+        <span class="btn-icon">⟺</span> Landscape
+      </button>
+    </div>
+
+  </div>
+  <!-- ═════════════════════════════════════════════════════ -->
+
+
+  <!-- ═══════════════════ FULLSCREEN VIEW ═══════════════════ -->
+  <div id="fullscreen-view" class="hidden">
+
+    <!-- Flip clock display -->
+    <div id="fs-clock-wrap">
+      <div id="fs-display"></div>
+      <div id="fs-labels"></div>
+    </div>
+
+    <!-- Overlay controls (fade out on idle) -->
+    <div id="fs-controls" class="fs-controls-visible">
+      <button class="fs-ctrl-btn" id="fs-exit-btn" onclick="exitFullscreen()">✕ Exit</button>
+      <div id="fs-mode-toggle">
+        <button class="fs-ctrl-btn" id="fs-sw-btn" onclick="fsSWToggle()"></button>
+        <button class="fs-ctrl-btn" onclick="fsSWReset()">↺ Reset</button>
+      </div>
+      <div id="fs-brightness-wrap">
+        <span>☀</span>
+        <input type="range" id="fs-brightness" min="10" max="100" value="100" oninput="setBrightness(this.value)" />
+      </div>
+    </div>
+
+    <!-- Tap hint -->
+    <div id="fs-tap-hint">Tap anywhere for controls</div>
+
+  </div>
+  <!-- ═════════════════════════════════════════════════════════ -->
+
+  <script src="app.js"></script>
+</body>
+</html>
