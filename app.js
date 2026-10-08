@@ -444,37 +444,85 @@ function selectMode(m) {
 }
 
 // ──────────────────────────────────────────────────────────────
+// STOPWATCH PERSISTENCE  (localStorage — survives minimize/close)
+// ──────────────────────────────────────────────────────────────
+const SW_KEY = 'fliptime_sw';
+
+function saveSW() {
+  localStorage.setItem(SW_KEY, JSON.stringify({
+    running:   state.swRunning,
+    elapsed:   state.swElapsed,
+    startedAt: state.swStartedAt,
+  }));
+}
+
+function restoreSW() {
+  try {
+    const raw = localStorage.getItem(SW_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+
+    state.swElapsed   = saved.elapsed   || 0;
+    state.swStartedAt = saved.startedAt || 0;
+    state.swRunning   = saved.running   || false;
+
+    // If it was running when the app was closed/minimised,
+    // the wall-clock time that passed while away is already
+    // counted via (Date.now() - swStartedAt) in getSWValues().
+    // We just need to reset swStartedAt to "now minus what's already in swElapsed"
+    // so the elapsed counter is continuous.
+    // Actually: leave swStartedAt as-is — getSWValues already does:
+    //   if (swRunning) ms += Date.now() - swStartedAt
+    // That naturally includes the time the phone was sleeping. ✅
+
+    // Sync button UI
+    if (state.swRunning) {
+      swStartBtn.textContent = 'PAUSE';
+      swStartBtn.classList.add('green');
+      swStartBtn.classList.remove('red');
+    } else if (state.swElapsed > 0) {
+      swStartBtn.textContent = 'RESUME';
+      swStartBtn.classList.add('red');
+      swStartBtn.classList.remove('green');
+    }
+  } catch (_) {}
+}
+
+// ──────────────────────────────────────────────────────────────
 // STOPWATCH CONTROLS
 // ──────────────────────────────────────────────────────────────
 function swToggle() {
   if (state.swRunning) {
-    // Pause
+    // Pause — lock in elapsed so far
     state.swElapsed += Date.now() - state.swStartedAt;
-    state.swRunning = false;
+    state.swRunning   = false;
     swStartBtn.textContent = 'RESUME';
     swStartBtn.classList.remove('green');
     swStartBtn.classList.add('red');
   } else {
     // Start / Resume
     state.swStartedAt = Date.now();
-    state.swRunning = true;
+    state.swRunning   = true;
     swStartBtn.textContent = 'PAUSE';
     swStartBtn.classList.remove('red');
     swStartBtn.classList.add('green');
   }
+  saveSW();           // ← persist every change
   updateFsSwBtn();
 }
 
 function swReset() {
-  state.swRunning = false;
-  state.swElapsed = 0;
+  state.swRunning   = false;
+  state.swElapsed   = 0;
   state.swStartedAt = 0;
   swStartBtn.textContent = 'START';
   swStartBtn.classList.remove('red');
   swStartBtn.classList.add('green');
+  saveSW();           // ← persist reset
   runTick();
   updateFsSwBtn();
 }
+
 
 // Fullscreen stopwatch buttons mirror home ones
 function fsSWToggle() { swToggle(); }
@@ -530,6 +578,7 @@ if ('serviceWorker' in navigator) {
 // INIT
 // ──────────────────────────────────────────────────────────────
 function init() {
+  restoreSW();        // ← load saved stopwatch before building UI
   buildPreview();
   startTickLoop();
   updateFsSwBtn();
